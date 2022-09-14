@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <cstdint>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -52,22 +53,88 @@ public:
 		isOpened = !isOpened;
 	}
 
-	int GetValue()
+	TCardValue GetValue()
+	{
+		return value;
+	}
+
+	int GetSuit()
 	{
 		return (int)value;
 	}
 };
 
+class Hand
+{
+private:
+	vector<Card*> collection;
+public:
+	void Add(Card* card) 
+	{
+		collection.push_back(card);
+	}
+	void Clear()
+	{
+		collection.clear();
+	}
+	int GetValue()
+	{
+		int sum = 0;
+		int countAces = 0;
+		for (size_t i = 0; i < collection.size(); i++)
+		{
+			if (collection[i]->GetValue() != TCardValue::ACE) //сначала считаем НЕ ТУЗЫ
+			{
+				sum += static_cast<int>(collection[i]->GetValue());
+			}
+			else //если же были тузы запоминаем их количество
+			{
+				countAces++;
+			}
+		}
+		for (size_t i = 0; i < countAces; i++) // затем проход по оставшимся тузам если они есть
+		{
+			if (sum + 11 <= 21) // если будет перебор либо попадание ровно в 21 очко, то можно смело считать туз за 11 очков
+			{
+				sum += 11;
+			}
+			else // в противном случае будем считать его единицей из перечисления
+			{
+				sum += static_cast<int>(TCardValue::ACE);
+			}
+		}
+		return sum;
+	}
+};
+
 int main()
 {
-	Card someCard(TCardValue::ACE, TSuit::SPADES);
-	cout << someCard.IsOpened() << endl;
-	someCard.Flip();
-	cout << someCard.IsOpened() << endl;
-	someCard.Flip();
-	cout << someCard.IsOpened() << endl;
-	someCard.Flip();
-	cout << someCard.IsOpened() << endl;
-	cout << endl << endl;
-	cout << someCard.GetValue() << endl;
+	//cout << someCard.IsOpened() << endl;
+	//someCard.Flip();
+	//cout << someCard.IsOpened() << endl;
+	//someCard.Flip();
+	//cout << someCard.IsOpened() << endl;
+	//someCard.Flip();
+	//cout << someCard.IsOpened() << endl;
+	//cout << endl << endl;
+	//cout << someCard.GetValue() << endl;
+
+	Card c1(TCardValue::ACE, TSuit::SPADES);
+	Card c2(TCardValue::FIVE, TSuit::SPADES);
+	Card c3(TCardValue::TEN, TSuit::SPADES);
+	Card c4(TCardValue::ACE, TSuit::HEARTS);
+	Hand hand;
+	Card* ptrCard = nullptr;
+	
+	ptrCard = &c1;
+	hand.Add(ptrCard);
+	ptrCard = &c2;
+	hand.Add(ptrCard);
+	ptrCard = &c3;
+	hand.Add(ptrCard);
+	ptrCard = &c4;
+	hand.Add(ptrCard);
+
+	cout << "in hand: " << hand.GetValue() << endl;
+
 }

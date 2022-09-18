@@ -107,6 +107,36 @@ public:
 	}
 };
 
+class GenericPlayer: Hand
+{
+private:
+	string name;
+public:
+	GenericPlayer(string name)
+	{
+		this.name = name;
+	}
+	virtual bool IsHitting() = 0;
+	bool IsBusted()
+	{
+		if (this->GetValue() > 21)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	void Bust()
+	{
+		if (IsBusted())
+		{
+			cout << name << " is busted!" << endl;
+		}
+	}
+};
+
 int main()
 {
 	//cout << someCard.IsOpened() << endl;

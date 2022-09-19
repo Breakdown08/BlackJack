@@ -114,7 +114,7 @@ private:
 public:
 	GenericPlayer(string name)
 	{
-		this.name = name;
+		this->name = name;
 	}
 	virtual bool IsHitting() = 0;
 	bool IsBusted()

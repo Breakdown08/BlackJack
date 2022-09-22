@@ -66,9 +66,8 @@ public:
 
 class Hand
 {
-private:
-	vector<Card*> collection;
 public:
+	vector<Card*> collection;
 	void Add(Card* card) 
 	{
 		collection.push_back(card);
@@ -77,7 +76,7 @@ public:
 	{
 		collection.clear();
 	}
-	int GetValue()
+	int GetValue() const
 	{
 		int sum = 0;
 		int countAces = 0;
@@ -107,17 +106,21 @@ public:
 	}
 };
 
-class GenericPlayer: Hand
+class GenericPlayer: public Hand
 {
 private:
 	string name;
 public:
+	string GetName() const
+	{
+		return name;
+	}
 	GenericPlayer(string name)
 	{
 		this->name = name;
 	}
 	virtual bool IsHitting() = 0;
-	bool IsBusted()
+	bool IsBusted() const
 	{
 		if (this->GetValue() > 21)
 		{
@@ -134,6 +137,64 @@ public:
 		{
 			cout << name << " is busted!" << endl;
 		}
+	}
+};
+
+class Player : public GenericPlayer
+{
+	virtual bool IsHitting() const
+	{
+		string answer;
+		if (!IsBusted())
+		{
+			cout << "Do you need one more card? ('yes' or any word)" << endl;
+			cin >> answer;
+			if (answer == "yes")
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+	void Win() const
+	{
+		cout << this->GetName() << " is WON" << endl;
+	}
+	void Lose() const
+	{
+		cout << this->GetName() << " is LOSE" << endl;
+	}
+	void Push() const
+	{
+		cout << this->GetName() << " is PUSH" << endl;
+	}
+};
+
+class House : public GenericPlayer
+{
+	virtual bool IsHitting() const //- метод указывает, нужна ли дилеру еще одна карта.Если у дилера не больше 16 очков, то он берет еще одну карту.
+	{
+		if (this->GetValue() <= 16)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	void FlipFirstCard() //- метод переворачивает первую карту дилера.
+	{
+		Card* card;
+		card = this->collection[0];
+		card->Flip();
 	}
 };
 
@@ -168,3 +229,10 @@ int main()
 	cout << "in hand: " << hand.GetValue() << endl;
 
 }
+
+
+/*5. Написать перегрузку оператора вывода для класса Card.
+Если карта перевернута рубашкой вверх(мы ее не видим), 
+вывести ХХ, если мы ее видим, вывести масть и номинал карты.
+Также для класса GenericPlayer написать перегрузку оператора вывода, 
+который должен отображать имя игрока и его карты, а также общую сумму очков его карт.*/

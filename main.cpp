@@ -5,12 +5,12 @@
 
 using namespace std;
 
-enum class TSuit
+enum class TSuit: char
 {
-	CLUBS, //КРЕСТИ
-	DIAMONDS, //БУБИ
-	HEARTS, //ЧЕРВИ
-	SPADES //ПИКИ
+	CLUBS = 'C', //КРЕСТИ
+	DIAMONDS = 'D', //БУБИ
+	HEARTS = 'H', //ЧЕРВИ
+	SPADES = 'S' //ПИКИ
 };
 
 enum class TCardValue : int
@@ -30,6 +30,18 @@ enum class TCardValue : int
 	KING = 10
 };
 
+int CardToInt(TCardValue value)
+{
+	return static_cast<int>(value);
+}
+
+char SuitToChar(TSuit suit)
+{
+	return static_cast<char>(suit);
+}
+
+
+
 class Card
 {
 private:
@@ -42,6 +54,8 @@ public:
 		this->value = value;
 		this->suit = suit;
 	}
+
+	friend ostream& operator<< (ostream& out, const Card* card);
 
 	bool IsOpened()
 	{
@@ -58,11 +72,24 @@ public:
 		return value;
 	}
 
-	int GetSuit()
+	TSuit GetSuit()
 	{
-		return (int)value;
+		return suit;
 	}
 };
+
+ostream& operator<< (ostream& out, Card* card)
+{
+	if (card->IsOpened())
+	{
+		out << CardToInt(card->GetValue()) << " of " << SuitToChar(card->GetSuit());
+	}
+	else
+	{
+		out << "XX";
+	}
+	return out;
+}
 
 class Hand
 {
@@ -70,6 +97,7 @@ public:
 	vector<Card*> collection;
 	void Add(Card* card) 
 	{
+		card->Flip(); //думаю это разумно, так как изначально выданная карта рубашкой вниз по умолчанию
 		collection.push_back(card);
 	}
 	void Clear()
@@ -119,7 +147,8 @@ public:
 	{
 		this->name = name;
 	}
-	virtual bool IsHitting() = 0;
+	friend ostream& operator<< (ostream& out, const GenericPlayer& gplayer);
+	virtual bool IsHitting() const = 0;
 	bool IsBusted() const
 	{
 		if (this->GetValue() > 21)
@@ -139,10 +168,22 @@ public:
 		}
 	}
 };
-
+ostream& operator<< (ostream& out, GenericPlayer& gplayer)
+{
+	out << "Name: " << gplayer.GetName() << endl;
+	out << "cards: ";
+	for (size_t i = 0; i < gplayer.collection.size(); i++)
+	{
+		out << gplayer.collection[i] << ", ";
+	}
+	out << endl << "score: " << gplayer.GetValue() << endl;
+	return out;
+}
 class Player : public GenericPlayer
 {
-	virtual bool IsHitting() const
+public:
+	Player(string name) : GenericPlayer(name) {}
+	virtual bool IsHitting() const override
 	{
 		string answer;
 		if (!IsBusted())
@@ -179,7 +220,7 @@ class Player : public GenericPlayer
 
 class House : public GenericPlayer
 {
-	virtual bool IsHitting() const //- метод указывает, нужна ли дилеру еще одна карта.Если у дилера не больше 16 очков, то он берет еще одну карту.
+	virtual bool IsHitting() const override //- метод указывает, нужна ли дилеру еще одна карта.Если у дилера не больше 16 очков, то он берет еще одну карту.
 	{
 		if (this->GetValue() <= 16)
 		{
@@ -200,39 +241,22 @@ class House : public GenericPlayer
 
 int main()
 {
-	//cout << someCard.IsOpened() << endl;
-	//someCard.Flip();
-	//cout << someCard.IsOpened() << endl;
-	//someCard.Flip();
-	//cout << someCard.IsOpened() << endl;
-	//someCard.Flip();
-	//cout << someCard.IsOpened() << endl;
-	//cout << endl << endl;
-	//cout << someCard.GetValue() << endl;
-
 	Card c1(TCardValue::ACE, TSuit::SPADES);
 	Card c2(TCardValue::FIVE, TSuit::SPADES);
 	Card c3(TCardValue::TEN, TSuit::SPADES);
 	Card c4(TCardValue::ACE, TSuit::HEARTS);
-	Hand hand;
+	Player player("Kirill");
 	Card* ptrCard = nullptr;
 	
 	ptrCard = &c1;
-	hand.Add(ptrCard);
+	player.Add(ptrCard);
 	ptrCard = &c2;
-	hand.Add(ptrCard);
+	player.Add(ptrCard);
 	ptrCard = &c3;
-	hand.Add(ptrCard);
+	player.Add(ptrCard);
 	ptrCard = &c4;
-	hand.Add(ptrCard);
-
-	cout << "in hand: " << hand.GetValue() << endl;
-
+	player.Add(ptrCard);
+	cout << player << endl;
 }
 
 
-/*5. Написать перегрузку оператора вывода для класса Card.
-Если карта перевернута рубашкой вверх(мы ее не видим), 
-вывести ХХ, если мы ее видим, вывести масть и номинал карты.
-Также для класса GenericPlayer написать перегрузку оператора вывода, 
-который должен отображать имя игрока и его карты, а также общую сумму очков его карт.*/

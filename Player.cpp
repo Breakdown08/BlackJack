@@ -5,7 +5,7 @@ bool Player::IsHitting() const
 	std::string answer;
 	if (!IsBusted())
 	{
-		std::cout << "Do you need one more card? ('yes' or any word)" << std::endl;
+		std::cout << GetName() << ", do you need one more card? ('yes' or any word)" << std::endl;
 		std::cin >> answer;
 		if (answer == "yes")
 		{

@@ -29,12 +29,20 @@ void GenericPlayer::Bust()
 }
 std::ostream& operator<< (std::ostream& out, GenericPlayer& gplayer)
 {
-out << "Name: " << gplayer.GetName() << std::endl;
-out << "cards: ";
-for (size_t i = 0; i < gplayer.collection.size(); i++)
-{
-	out << gplayer.collection[i] << ", ";
-}
-out << std::endl << "score: " << gplayer.GetValue() << std::endl;
-return out;
+	out << "Name: " << gplayer.GetName() << std::endl;
+	out << "cards: ";
+	for (size_t i = 0; i < gplayer.collection.size(); i++)
+	{
+		out << gplayer.collection[i] << ", ";
+	}
+	if (!gplayer.collection[0]->IsOpened())
+	{
+		out << std::endl << "score: IS HIDDEN" << std::endl;
+	}
+	else
+	{
+		out << std::endl << "score: " << gplayer.GetValue() << std::endl;
+	}
+	
+	return out;
 }

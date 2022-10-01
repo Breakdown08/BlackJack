@@ -1,7 +1,11 @@
 #include "Deck.h"
-#include "Funcs.h"
-//#include <vector>       // std::vector
+
 Deck::Deck()
+{
+	Init();
+}
+
+void Deck::Init()
 {
 	Populate();
 	Shuffle();
@@ -39,13 +43,14 @@ void Deck::Populate()
 void Deck::Shuffle()
 {
 	std::srand(unsigned(std::time(0)));
-	std::shuffle(this->collection.begin(), this->collection.end());
+	std::random_shuffle(this->collection.begin(), this->collection.end());
 }
 
 void Deck::Deal(Hand& aHand)
 {
 	if (!this->collection.empty())
 	{
+		this->collection[0]->Flip();
 		aHand.Add(this->collection[0]);
 		this->collection.erase(this->collection.begin());
 	}
@@ -53,7 +58,7 @@ void Deck::Deal(Hand& aHand)
 
 void Deck::AdditionalCards(GenericPlayer& aGenericPlayer)
 {
-	if (!aGenericPlayer.IsHitting())
+	if (aGenericPlayer.IsHitting())
 	{
 		Deal(aGenericPlayer);
 	}

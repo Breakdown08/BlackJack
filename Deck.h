@@ -4,17 +4,17 @@
 #include <random>
 #include <ctime>        
 #include <cstdlib>      
+#include "Funcs.h"
 #include <algorithm>    
 #include <iterator>    
 
-class Deck : Hand
+class Deck : public Hand
 {
-private:
-	int myrandom(int i) { return std::rand() % i; };
 public:
 	Deck();
 	void Populate();
 	void Shuffle();
+	void Init();
 	void Deal(Hand& aHand);
 	void AdditionalCards(GenericPlayer& aGenericPlayer);
 };

@@ -1,4 +1,5 @@
 #pragma once
+#include "Funcs.h"
 #include "Enums.h"
 #include <iostream>
 class Card
@@ -9,6 +10,7 @@ private:
 	bool isOpened = false;
 public:
 	Card(TCardValue value, TSuit suit);
+	~Card() {}
 
 	friend std::ostream& operator<< (std::ostream& out, const Card* card);
 

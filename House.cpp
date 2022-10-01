@@ -2,7 +2,7 @@
 
 House::House() : GenericPlayer("HOUSE") {}
 
-bool House::IsHitting() const //- метод указывает, нужна ли дилеру еще одна карта.Если у дилера не больше 16 очков, то он берет еще одну карту.
+bool House::IsHitting() const
 {
 	if (this->GetValue() <= 16)
 	{
@@ -13,9 +13,10 @@ bool House::IsHitting() const //- метод указывает, нужна ли дилеру еще одна карт
 		return false;
 	}
 }
-void House::FlipFirstCard() //- метод переворачивает первую карту дилера.
+void House::FlipFirstCard()
 {
-	Card* card;
-	card = this->collection[0];
-	card->Flip();
+	if (!collection.empty())
+	{
+		collection[0]->Flip();
+	}
 }

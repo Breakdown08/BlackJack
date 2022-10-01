@@ -1,6 +1,4 @@
 #include "Card.h"
-#include "Funcs.h"
-
 
 Card::Card(TCardValue value, TSuit suit)
 {

@@ -1,27 +1,33 @@
-﻿#include "Player.h"
+#include "Player.h"
 #include "Game.h"
+
+int playersCount;
 
 int main()
 {
-	//Card c1(TCardValue::ACE, TSuit::SPADES);
-	//Card c2(TCardValue::FIVE, TSuit::SPADES);
-	//Card c3(TCardValue::TEN, TSuit::SPADES);
-	//Card c4(TCardValue::ACE, TSuit::HEARTS);
-	Player player("Kirill");
 	std::vector<Player> players;
-	players.push_back(player);
-	//Card* ptrCard = nullptr;
-	//
-	//ptrCard = &c1;
-	//player.Add(ptrCard);
-	//ptrCard = &c2;
-	//player.Add(ptrCard);
-	//ptrCard = &c3;
-	//player.Add(ptrCard);
-	//ptrCard = &c4;
-	//player.Add(ptrCard);
-	//std::cout << player << std::endl;
+	std::string wannaAgain;
+	std::cout << "Input a count of players: ";
+	std::cin >> playersCount;
+	for (size_t i = 0; i < playersCount; i++)
+	{
+		std::string playerName;
+		std::cout << "Input " << i + 1 << " player name:";
+		std::cin >> playerName;
+		Player player(playerName);
+		players.push_back(player);
+	}
 	Game game(players);
+	game.Play();
+	std::cout << "Do you want to play again??" << std::endl;
+	std::cin >> wannaAgain;
+	while (wannaAgain == "yes")
+	{
+		game.deck.Init();
+		game.Play();
+		std::cout << "Do you want to play again??" << std::endl;
+		std::cin >> wannaAgain;
+	}
 }
 
 
